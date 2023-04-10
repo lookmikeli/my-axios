@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- 新闻列表 -->
+    <div id="news-list">
+      <!-- 新闻item项 -->
+      <div id="news-iiem">
+        <img src="" alt="" class="thumb" />
+        <div class="right-box">
+          <!-- 新闻标题 -->
+          <h1 class="title">5G商用在即,三大运营商营收持续下降</h1>
+          <div class="footer">
+            <div>
+              <!-- 新闻来源 -->
+              <span>胡润白虎</span>
+              <!-- 发布时间 -->
+              <span>2019-10-28 10:14:38</span>
+            </div>
+            <!-- 评论数量 -->
+            <span>评论数:66</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="axios.js"></script>
+    <script>
+      // 1.页面一加载，就发送 ajax 请求
+      // 2.渲染服务器响应的数据
+
+      // 设置基地址
+      axios.defaults.baseURL = "http://ajax-api.itheima.net";
+      axios.get("/api/news").then((res) => {
+        // console.log(res.data.data);
+        // 遍历数组
+        document.querySelector("#news-list").innerHTML = res.data.data
+          .map(
+            (item) =>
+              `
+          <div id="news-iiem">
+        <img src="${item.img}" alt="" class="thumb" />
+        <div class="right-box">
+          <!-- 新闻标题 -->
+          <h1 class="title">${item.title}</h1>
+          <div class="footer">
+            <div>
+              <!-- 新闻来源 -->
+              <span>${item.source}</span>
+              <!-- 发布时间 -->
+              <span>${item.time}</span>
+            </div>
+            <!-- 评论数量 -->
+            <span>${item.cmtcount}</span>
+          </div>
+        </div>
+      </div>`
+          )
+          .join("");
+      });
+    </script>
+  </body>
+</html>

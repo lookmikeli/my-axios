@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script src="axios.js"></script>
+    <script>
+      // 设置基地址 简化url
+      //   axios.defaults.baseURL = "域名";
+      axios.defaults.baseURL = "http://ajax-base-api-t.itheima.net";
+      // 真实地址 = baseURL + url
+      axios.get("/api/getbooks").then((res) => {
+        console.log(res.data);
+      });
+
+      axios
+        .get("/api/getbooks", { params: { bookname: "西游记" } })
+        .then((res) => {
+          console.log(res.data);
+        });
+    </script>
+  </body>
+</html>

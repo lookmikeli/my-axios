@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link rel="stylesheet" href="bootstrap.css" />
+    <script src="axios.js"></script>
+  </head>
+
+  <body style="padding: 15px">
+    <!-- 添加图书的Panel面板 -->
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">添加新图书</h3>
+      </div>
+      <form action="">
+        <div class="panel-body form-inline">
+          <div class="input-group">
+            <div class="input-group-addon">书名</div>
+            <input
+              type="text"
+              class="form-control"
+              id="iptBookname"
+              placeholder="请输入书名"
+            />
+          </div>
+
+          <div class="input-group">
+            <div class="input-group-addon">作者</div>
+            <input
+              type="text"
+              class="form-control"
+              id="iptAuthor"
+              placeholder="请输入作者"
+            />
+          </div>
+
+          <div class="input-group">
+            <div class="input-group-addon">出版社</div>
+            <input
+              type="text"
+              class="form-control"
+              id="iptPublisher"
+              placeholder="请输入出版社"
+            />
+          </div>
+          <button id="btnAdd" class="btn btn-primary">添加</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- 图书的表格 -->
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>书名</th>
+          <th>作者</th>
+          <th>出版社</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody id="tb"></tbody>
+    </table>
+
+    <script>
+      // 1.查询业务
+      // 获取查询的参数： 有则获取，无则省略
+      // 发送 ajax请求
+      // 渲染响应的数据
+      // 2.新增业务
+      // 收集数据 ： 根据接口文档收集
+      // 校验数据 ： 非空+ 正则
+      // 发送数据据 ：发送ajax
+      // 处理数据 ：重新渲染页面
+
+      // 查询业务
+      function getbooksList() {
+        axios
+          .get("http://ajax-base-api-t.itheima.net/api/getbooks")
+          .then((res) => {
+            // console.log(res);
+            // debugger;
+            document.querySelector("#tb").innerHTML = res.data.data
+              .map(function (item) {
+                // console.log(item);
+                return `
+          <tr>
+          <td>${item.id}</td>
+          <td>${item.bookname}</td>
+          <td>${item.author}</td>
+          <td>${item.publisher}</td>
+          <td><a href="javascript:;" data-id="${item.id}">删除</a></td>
+        </tr>`;
+              })
+              .join("");
+          });
+      }
+      // 调用函数
+      getbooksList();
+      // 点击新增业务
+      document.querySelector("#btnAdd").addEventListener("click", function (e) {
+        e.preventDefault();
+        const bookname = document.querySelector("#iptBookname").value;
+        const author = document.querySelector("#iptAuthor").value;
+        const publisher = document.querySelector("#iptPublisher").value;
+        if (bookname === "" || author === "" || publisher === "") {
+          return alert("不能为空");
+        }
+        axios
+          .post("http://ajax-base-api-t.itheima.net/api/addbook", {
+            bookname,
+            author,
+            publisher,
+          })
+          .then((res) => {
+            // console.log(res);
+            // 处理数据；刷新列表
+            if (res.data.status === 201) {
+              alert("添加成功");
+              // 刷新列表
+              getbooksList();
+              // 清空表单
+              document.querySelector("form").reset();
+            }
+          });
+      });
+
+      // 删除图书  事件委托
+      // 1.获取参数：图书的id
+      // 2.发请求
+      // 3.处理响应的结果：删除成功，刷新列表
+      document.body.addEventListener("click", function (e) {
+        if (e.target.tagName === "A") {
+          // 获取删除按钮自定义属性 dataset.id
+          const id = e.target.dataset.id;
+          // 发送ajax
+          axios
+            .get("http://ajax-base-api-t.itheima.net/api/delbook", {
+              params: { id },
+            })
+            .then((res) => {
+              // console.log(res);
+              // 判断是否删除成功 status 状态
+              if (res.data.status === 200) {
+                alert("删除成功");
+                getbooksList();
+              }
+            });
+        }
+      });
+    </script>
+  </body>
+</html>

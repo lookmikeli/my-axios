@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      div {
+        display: flex;
+        flex-direction: column;
+        width: 500px;
+        margin: 500px;
+        box-shadow: 2px 2px 5px #ccc;
+        background: #eee;
+      }
+      input {
+        width: 300px;
+        height: 30px;
+        outline: none;
+      }
+      button {
+        width: 50px;
+        height: 50px;
+        background: rgb(22, 184, 212);
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <label for="">用户名</label>
+      <input type="text" class="iptText" />
+      <label for="">密码</label>
+      <input type="password" class="iptPsw" />
+      <button>登录</button>
+    </div>
+    <script src="axios.js"></script>
+    <script>
+      // 1.点击登录按钮
+      //   1.1收集数据：获取输入框文本
+      //   1.2校验数据：非空 +正则
+      //   1.3发送数据：ajax请求
+      //   1.4处理数据：成功跳转首页
+
+      // 1.点击登录按钮
+      document.querySelector("button").addEventListener("click", function () {
+        // 收集数据
+        const username = document.querySelector(".iptText").value;
+        const password = document.querySelector(".iptPsw").value;
+        // 校验数据
+        if (username.length === 0 || password.length === 0) {
+          alert("用户名和密码不能为空");
+        }
+        // 发送数据
+        axios
+          .post("http://ajax-api.itheima.net/api/login", { username, password })
+          .then((res) => {
+            // 处理数据
+            console.log(res);
+            // 跳转首页
+            location.href = "http://www.baidu.com";
+          });
+      });
+    </script>
+  </body>
+</html>
